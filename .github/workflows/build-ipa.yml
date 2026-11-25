@@ -1,0 +1,30 @@
+name: Build LiMusic IPA
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    defaults:
+      run:
+        working-directory: LiMusic-iOS-2.5.3/LiMusic-iOS
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show Xcode version
+        run: xcodebuild -version
+
+      - name: Build unsigned IPA
+        run: |
+          chmod +x build-ipa.sh
+          ./build-ipa.sh
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: LiMusic-ipa
+          path: LiMusic-iOS-2.5.3/LiMusic-iOS/build/LiMusic.ipa
+          retention-days: 30
